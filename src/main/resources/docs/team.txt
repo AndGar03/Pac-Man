@@ -1,0 +1,4 @@
+Equipo de Desarrollo Pac-Man
+============================
+Este archivo contiene información del equipo de desarrollo.
+
