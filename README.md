@@ -50,7 +50,7 @@ src/main/java/com/miempresa/pacman/
 
 #### Servidor (`src/main/resources/data/server.properties`)
 ```properties
-server.port=8888
+socket.port=9090
 db.url=jdbc:mysql://localhost:3306/pacman_db
 db.user=root
 db.password=root
@@ -60,7 +60,7 @@ users.to.load=player1:pass1,player2:pass2,admin:admin123
 #### Cliente (`src/main/resources/data/client.properties`)
 ```properties
 server.ip=localhost
-server.port=8888
+socket.port=9090
 ```
 
 ## Ejecución

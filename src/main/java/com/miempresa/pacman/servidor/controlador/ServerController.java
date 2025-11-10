@@ -52,33 +52,74 @@ public class ServerController {
      */
     public void iniciarServidor() {
         SwingUtilities.invokeLater(() -> {
-            // Inicializar vista
-            vista = new ServerWindow();
-            configurarEventos();
-            vista.mostrar();
-            
-            // Cargar configuración
-            Properties props = Configuracion.cargarPropiedades(RUTA_PROPERTIES);
-            String puertoStr = Configuracion.obtenerPropiedad(props, "server.port", "8888");
-            String dbUrl = Configuracion.obtenerPropiedad(props, "db.url", "jdbc:mysql://localhost:3306/pacman_db");
-            String dbUser = Configuracion.obtenerPropiedad(props, "db.user", "root");
-            String dbPassword = Configuracion.obtenerPropiedad(props, "db.password", "root");
-            
-            // Cargar driver de MySQL
             try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                System.err.println("Error: No se encontró el driver de MySQL. Asegúrate de tener mysql-connector-j en el classpath.");
+                System.out.println("Iniciando servidor...");
+                
+                // Inicializar vista
+                System.out.println("Creando ventana...");
+                vista = new ServerWindow();
+                configurarEventos();
+                System.out.println("Mostrando ventana...");
+                vista.mostrar();
+                System.out.println("Ventana mostrada.");
+                
+                // Cargar configuración
+                System.out.println("Cargando configuración...");
+                Properties props = Configuracion.cargarPropiedades(RUTA_PROPERTIES);
+                String puertoStr = Configuracion.obtenerPropiedad(props, "socket.port", "9090");
+                String dbUrl = Configuracion.obtenerPropiedad(props, "db.url", "jdbc:mysql://localhost:3306/pacman_db");
+                String dbUser = Configuracion.obtenerPropiedad(props, "db.user", "root");
+                String dbPassword = Configuracion.obtenerPropiedad(props, "db.password", "root");
+                
+                System.out.println("Configuración cargada:");
+                System.out.println("  Puerto servidor: " + puertoStr);
+                System.out.println("  URL MySQL: " + dbUrl);
+                System.out.println("  Usuario MySQL: " + dbUser);
+                
+                // Cargar driver de MySQL
+                System.out.println("Cargando driver MySQL...");
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    System.out.println("Driver MySQL cargado correctamente.");
+                } catch (ClassNotFoundException e) {
+                    System.err.println("ERROR: No se encontró el driver de MySQL. Asegúrate de tener mysql-connector-j en el classpath.");
+                    javax.swing.JOptionPane.showMessageDialog(null, 
+                        "Error: No se encontró el driver de MySQL.\nAsegúrate de tener mysql-connector-j en el classpath.",
+                        "Error de Configuración", 
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                // Inicializar DAO (Dependency Injection)
+                System.out.println("Inicializando DAO...");
+                jugadorDAO = new com.miempresa.pacman.dao.JugadorDAOImpl(dbUrl, dbUser, dbPassword);
+                
+                // Cargar usuarios desde properties
+                System.out.println("Cargando usuarios desde properties...");
+                try {
+                    jugadorDAO.cargarUsuariosDesdeProperties(RUTA_PROPERTIES);
+                    System.out.println("Usuarios cargados correctamente.");
+                } catch (Exception e) {
+                    System.err.println("ERROR al cargar usuarios: " + e.getMessage());
+                    e.printStackTrace();
+                    javax.swing.JOptionPane.showMessageDialog(vista, 
+                        "Error al cargar usuarios desde la base de datos:\n" + e.getMessage(),
+                        "Error de Base de Datos", 
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+                
+                // Iniciar servidor en hilo separado
+                System.out.println("Iniciando servidor de sockets...");
+                new Thread(this::iniciarServerSocket).start();
+                
+            } catch (Exception e) {
+                System.err.println("ERROR CRÍTICO al iniciar servidor: " + e.getMessage());
+                e.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(null, 
+                    "Error crítico al iniciar el servidor:\n" + e.getMessage(),
+                    "Error Crítico", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-            
-            // Inicializar DAO (Dependency Injection)
-            jugadorDAO = new com.miempresa.pacman.dao.JugadorDAOImpl(dbUrl, dbUser, dbPassword);
-            
-            // Cargar usuarios desde properties
-            jugadorDAO.cargarUsuariosDesdeProperties(RUTA_PROPERTIES);
-            
-            // Iniciar servidor en hilo separado
-            new Thread(this::iniciarServerSocket).start();
         });
     }
     
@@ -100,7 +141,7 @@ public class ServerController {
     private void iniciarServerSocket() {
         try {
             Properties props = Configuracion.cargarPropiedades(RUTA_PROPERTIES);
-            int puerto = Integer.parseInt(Configuracion.obtenerPropiedad(props, "server.port", "8888"));
+            int puerto = Integer.parseInt(Configuracion.obtenerPropiedad(props, "socket.port", "9090"));
             
             serverSocket = new ServerSocket(puerto);
             servidorActivo = true;

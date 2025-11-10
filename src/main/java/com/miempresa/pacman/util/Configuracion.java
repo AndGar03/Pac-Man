@@ -1,5 +1,6 @@
 package com.miempresa.pacman.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +19,7 @@ public class Configuracion {
     
     /**
      * Carga propiedades desde un archivo.
+     * Intenta cargar desde múltiples ubicaciones posibles.
      * 
      * @param rutaArchivo La ruta al archivo de propiedades
      * @return Un objeto Properties con las propiedades cargadas
@@ -25,10 +27,48 @@ public class Configuracion {
     public static Properties cargarPropiedades(String rutaArchivo) {
         Properties props = new Properties();
         
-        try (InputStream input = new FileInputStream(rutaArchivo)) {
-            props.load(input);
-        } catch (IOException e) {
-            System.err.println("Error al cargar archivo de propiedades: " + e.getMessage());
+        // Intentar cargar desde diferentes ubicaciones
+        String[] rutas = {
+            rutaArchivo,  // Ruta original
+            "../" + rutaArchivo,  // Desde build/classes
+            "../../" + rutaArchivo,  // Desde build/classes/com/...
+            "src/main/resources/data/" + new File(rutaArchivo).getName(),  // Nombre del archivo desde raíz
+            System.getProperty("user.dir") + File.separator + rutaArchivo  // Desde directorio de trabajo
+        };
+        
+        boolean cargado = false;
+        for (String ruta : rutas) {
+            try {
+                File archivo = new File(ruta);
+                if (archivo.exists() && archivo.isFile()) {
+                    try (InputStream input = new FileInputStream(archivo)) {
+                        props.load(input);
+                        cargado = true;
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                // Continuar con la siguiente ruta
+            }
+        }
+        
+        // Si no se pudo cargar desde archivo, intentar desde recursos
+        if (!cargado) {
+            try {
+                InputStream input = Configuracion.class.getClassLoader()
+                    .getResourceAsStream("data/" + new File(rutaArchivo).getName());
+                if (input != null) {
+                    props.load(input);
+                    cargado = true;
+                }
+            } catch (IOException e) {
+                // Ignorar
+            }
+        }
+        
+        if (!cargado) {
+            System.err.println("Error: No se pudo cargar el archivo de propiedades: " + rutaArchivo);
+            System.err.println("Intentó buscar en: " + String.join(", ", rutas));
         }
         
         return props;

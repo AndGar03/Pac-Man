@@ -107,7 +107,7 @@ public class ClientController {
         Properties props = Configuracion.cargarPropiedades(archivoProperties.getAbsolutePath());
         
         String serverIp = Configuracion.obtenerPropiedad(props, "server.ip", "localhost");
-        String serverPortStr = Configuracion.obtenerPropiedad(props, "server.port", "8888");
+        String serverPortStr = Configuracion.obtenerPropiedad(props, "socket.port", "9090");
         
         try {
             int serverPort = Integer.parseInt(serverPortStr);

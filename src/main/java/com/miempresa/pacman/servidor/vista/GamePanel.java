@@ -54,6 +54,12 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         
+        // Si no hay juego activo, mostrar mensaje de espera
+        if (pacMan == null && items == null) {
+            dibujarMensajeEspera(g2d);
+            return;
+        }
+        
         if (pacMan != null) {
             dibujarPacMan(g2d);
         }
@@ -61,6 +67,38 @@ public class GamePanel extends JPanel {
         if (items != null) {
             dibujarItems(g2d);
         }
+    }
+    
+    /**
+     * Dibuja un mensaje indicando que el servidor está esperando conexiones.
+     * 
+     * @param g2d El contexto gráfico
+     */
+    private void dibujarMensajeEspera(Graphics2D g2d) {
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(g2d.getFont().deriveFont(24f));
+        
+        String mensaje = "Servidor Pac-Man";
+        String mensaje2 = "Esperando conexiones de clientes...";
+        String mensaje3 = "Puerto: 9090";
+        
+        // Centrar el texto
+        int ancho = getWidth();
+        int alto = getHeight();
+        
+        java.awt.FontMetrics fm = g2d.getFontMetrics();
+        int x1 = (ancho - fm.stringWidth(mensaje)) / 2;
+        int x2 = (ancho - fm.stringWidth(mensaje2)) / 2;
+        int x3 = (ancho - fm.stringWidth(mensaje3)) / 2;
+        
+        int y = alto / 2 - 30;
+        g2d.drawString(mensaje, x1, y);
+        g2d.setFont(g2d.getFont().deriveFont(16f));
+        fm = g2d.getFontMetrics();
+        y += 40;
+        g2d.drawString(mensaje2, x2, y);
+        y += 30;
+        g2d.drawString(mensaje3, x3, y);
     }
     
     /**

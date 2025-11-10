@@ -53,6 +53,11 @@ public class ManejadorResultados {
         List<ResultadoJuego> resultados = new ArrayList<>();
         
         try (RandomAccessFile raf = new RandomAccessFile(ARCHIVO_RESULTADOS, "r")) {
+            // Verificar que el archivo no esté vacío
+            if (raf.length() == 0) {
+                return resultados; // Archivo vacío, retornar lista vacía
+            }
+            
             while (raf.getFilePointer() < raf.length()) {
                 // Leer nombre (50 caracteres = 100 bytes)
                 StringBuilder nombre = new StringBuilder();
@@ -72,8 +77,11 @@ public class ManejadorResultados {
                 
                 resultados.add(new ResultadoJuego(nombreJugador, puntaje, tiempo));
             }
+        } catch (java.io.FileNotFoundException e) {
+            // Archivo no existe aún (primera ejecución) - esto es normal, no es un error
+            // No imprimir mensaje de error en este caso
         } catch (IOException e) {
-            // Archivo no existe o está vacío
+            // Otro tipo de error de I/O
             System.err.println("Error al leer resultados: " + e.getMessage());
         }
         
