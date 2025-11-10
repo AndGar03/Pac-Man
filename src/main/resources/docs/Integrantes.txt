@@ -1,0 +1,5 @@
+Equipo de Desarrollo Pac-Man
+============================
+Este archivo contiene los nombres del equipo de desarrollo.
+Daniel Felipe Santamaria Duran 20242020023
+Carlos Andrés García Ramos - 20242020206
