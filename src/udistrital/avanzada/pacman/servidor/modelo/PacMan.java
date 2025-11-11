@@ -126,9 +126,26 @@ public class PacMan {
         }
         
         Point posItem = item.getPosicion();
-        // Colisión simple basada en distancia
+        // Mejora: aumentar tolerancia y considerar solapamiento de cajas para capturas más fiables
+        // Tolerancia radial ampliada (aprox. radio de la fruta ~20px)
         double distancia = posicion.distance(posItem);
-        return distancia < (TAMAÑO + 15); // 15 es aproximadamente el tamaño del ítem
+        if (distancia <= (TAMAÑO + 20)) {
+            return true;
+        }
+        // Chequeo adicional AABB (Axis-Aligned Bounding Box) con margen
+        int margen = 8;
+        int pacLeft = posicion.x - margen;
+        int pacTop = posicion.y - margen;
+        int pacRight = posicion.x + TAMAÑO + margen;
+        int pacBottom = posicion.y + TAMAÑO + margen;
+        int itemSize = 20; // aproximación del tamaño de fruta
+        int itemLeft = posItem.x - itemSize / 2;
+        int itemTop = posItem.y - itemSize / 2;
+        int itemRight = posItem.x + itemSize / 2;
+        int itemBottom = posItem.y + itemSize / 2;
+        boolean overlap = pacRight >= itemLeft && pacLeft <= itemRight &&
+                          pacBottom >= itemTop && pacTop <= itemBottom;
+        return overlap;
     }
     
     /**

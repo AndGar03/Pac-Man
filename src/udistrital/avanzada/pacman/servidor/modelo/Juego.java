@@ -74,7 +74,19 @@ public class Juego {
         boolean movimientoExitoso = pacMan.mover(direccion);
 
         if (!movimientoExitoso) {
-            // Requisito: Informar límite sin revelar cuántas casillas se movió ni sugerir dirección
+            // Requisito: Informar límite sin revelar cuántas casillas ni la dirección alternativa
+            // Además, mover aleatoriamente a una de las otras tres direcciones disponibles
+            List<PacMan.Direccion> alternativas = new ArrayList<>();
+            for (PacMan.Direccion d : PacMan.Direccion.values()) {
+                if (d != direccion) alternativas.add(d);
+            }
+            Collections.shuffle(alternativas);
+            for (PacMan.Direccion alt : alternativas) {
+                if (pacMan.mover(alt)) {
+                    break; // aplicar solo el primer movimiento alternativo válido
+                }
+            }
+            // No revelar la dirección en el mensaje
             return new ResultadoMovimiento(false, "Límite alcanzado");
         }
         
