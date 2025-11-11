@@ -43,7 +43,7 @@ public class JugadorDAOImpl implements IJugadorDAO {
      */
     @Override
     public Jugador validarCredenciales(String usuario, String contraseña) {
-        String sql = "SELECT id, usuario FROM usuarios WHERE usuario = ? AND contraseña = ?";
+        String sql = "SELECT id, usuario FROM usuarios WHERE usuario = ? AND `contraseña` = ?";
         
         try (Connection conn = DriverManager.getConnection(url, this.usuario, this.contraseña);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -78,7 +78,7 @@ public class JugadorDAOImpl implements IJugadorDAO {
         }
         
         String[] usuarios = usuariosStr.split(",");
-        String sql = "INSERT INTO usuarios (usuario, contraseña) VALUES (?, ?) "
+        String sql = "INSERT INTO usuarios (usuario, `contraseña`) VALUES (?, ?) "
                    + "ON DUPLICATE KEY UPDATE usuario = usuario";
         
         try (Connection conn = DriverManager.getConnection(url, this.usuario, this.contraseña);

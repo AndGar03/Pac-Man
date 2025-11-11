@@ -90,10 +90,17 @@ public class ClientHandler extends Thread {
             // Solicitar usuario
             manejadorSockets.escribirLinea("Usuario:");
             String usuario = manejadorSockets.leerLinea();
+            if (usuario != null) usuario = usuario.trim();
             
             // Solicitar contraseña
             manejadorSockets.escribirLinea("Contraseña:");
             String contraseña = manejadorSockets.leerLinea();
+            if (contraseña != null) contraseña = contraseña.trim();
+            
+            if (usuario == null || usuario.isEmpty() || contraseña == null || contraseña.isEmpty()) {
+                manejadorSockets.escribirLinea("Credenciales inválidas");
+                return false;
+            }
             
             // Validar credenciales
             jugador = jugadorDAO.validarCredenciales(usuario, contraseña);

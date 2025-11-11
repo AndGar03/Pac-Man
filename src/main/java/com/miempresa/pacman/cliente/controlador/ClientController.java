@@ -205,6 +205,7 @@ public class ClientController {
                         vista.agregarMensaje("Servidor: ¡Juego terminado! " + info);
                         vista.habilitarControles(false);
                     });
+                    desconectar();
                     break;
                 }
                 

@@ -15,7 +15,7 @@ import java.awt.Dimension;
 public class PacMan {
     
     private static final int TAMAÑO = 20;
-    private static final int VELOCIDAD = 4;
+    private static final int VELOCIDAD = 20;
     
     private Point posicion;
     private final Dimension areaJuego;

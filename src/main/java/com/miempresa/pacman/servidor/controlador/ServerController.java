@@ -69,7 +69,7 @@ public class ServerController {
                 String puertoStr = Configuracion.obtenerPropiedad(props, "socket.port", "9090");
                 String dbUrl = Configuracion.obtenerPropiedad(props, "db.url", "jdbc:mysql://localhost:3306/pacman_db");
                 String dbUser = Configuracion.obtenerPropiedad(props, "db.user", "root");
-                String dbPassword = Configuracion.obtenerPropiedad(props, "db.password", "root");
+                String dbPassword = Configuracion.obtenerPropiedad(props, "db.password", "TomateRojo");
                 
                 System.out.println("Configuración cargada:");
                 System.out.println("  Puerto servidor: " + puertoStr);

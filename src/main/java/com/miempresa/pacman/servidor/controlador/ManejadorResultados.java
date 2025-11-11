@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ManejadorResultados {
     
-    private static final String ARCHIVO_RESULTADOS = "resultados.dat";
+    private static final String ARCHIVO_RESULTADOS = "data/resultados.dat";
     private static final int TAMAÑO_REGISTRO = 100; // Tamaño fijo de cada registro
     
     /**
@@ -27,7 +27,13 @@ public class ManejadorResultados {
      * @param tiempoSegundos El tiempo de juego en segundos
      */
     public void guardarResultado(String nombreJugador, int puntaje, long tiempoSegundos) {
-        try (RandomAccessFile raf = new RandomAccessFile(ARCHIVO_RESULTADOS, "rw")) {
+        try {
+            java.io.File archivo = new java.io.File(ARCHIVO_RESULTADOS);
+            java.io.File carpeta = archivo.getParentFile();
+            if (carpeta != null && !carpeta.exists()) {
+                carpeta.mkdirs();
+            }
+            try (RandomAccessFile raf = new RandomAccessFile(archivo, "rw")) {
             // Ir al final del archivo (append)
             raf.seek(raf.length());
             
@@ -39,6 +45,7 @@ public class ManejadorResultados {
             }
             raf.writeInt(puntaje);
             raf.writeLong(tiempoSegundos);
+            }
         } catch (IOException e) {
             System.err.println("Error al guardar resultado: " + e.getMessage());
         }
