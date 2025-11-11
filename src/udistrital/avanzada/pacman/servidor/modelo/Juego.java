@@ -72,8 +72,9 @@ public class Juego {
         }
         
         boolean movimientoExitoso = pacMan.mover(direccion);
-        
+
         if (!movimientoExitoso) {
+            // Requisito: Informar límite sin revelar cuántas casillas se movió ni sugerir dirección
             return new ResultadoMovimiento(false, "Límite alcanzado");
         }
         

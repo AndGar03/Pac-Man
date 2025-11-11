@@ -9,6 +9,8 @@ import javax.swing.SwingUtilities;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ public class ControlServidor {
     private final List<ManejadorCliente> clientesActivos;
     private final ManejadorResultados manejadorResultados;
     
-    private static final String RUTA_PROPERTIES = "src/main/resources/data/server.properties";
+    private static final String RUTA_PROPERTIES = "src/data/server.properties";
     private static final Dimension AREA_JUEGO = new Dimension(800, 600);
     
     /**
@@ -87,6 +89,22 @@ public class ControlServidor {
                         "Error: No se encontró el driver de MySQL.\nAsegúrate de tener mysql-connector-j en el classpath.",
                         "Error de Configuración", 
                         javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Probar conexión antes de continuar
+                try (Connection cx = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+                    System.out.println("Conexión a MySQL exitosa.");
+                } catch (Exception e) {
+                    System.err.println("ERROR: No fue posible conectar a MySQL: " + e.getMessage());
+                    javax.swing.JOptionPane.showMessageDialog(
+                        vista,
+                        "No fue posible conectar a MySQL con la configuración actual.\n" +
+                        "URL: " + dbUrl + "\nUsuario: " + dbUser + "\n" +
+                        "Detalle: " + e.getMessage(),
+                        "Error de Conexión a BD",
+                        javax.swing.JOptionPane.ERROR_MESSAGE
+                    );
                     return;
                 }
                 

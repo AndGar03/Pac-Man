@@ -15,7 +15,8 @@ import java.awt.Dimension;
 public class PacMan {
     
     private static final int TAMAÑO = 20;
-    private static final int VELOCIDAD = 20;
+    // Cada comando debe mover 4 casillas -> 4 * TAMAÑO píxeles
+    private static final int VELOCIDAD = TAMAÑO * 4;
     
     private Point posicion;
     private final Dimension areaJuego;
@@ -54,11 +55,11 @@ public class PacMan {
     
     /**
      * Intenta mover a Pac-Man en una dirección específica.
-     * Se mueve píxel por píxel (4 píxeles total) y se detiene si alcanza un borde
+     * Se mueve píxel por píxel (4 casillas = 4 * TAMAÑO píxeles) y se detiene si alcanza un borde
      * en cualquier momento del movimiento.
      * 
      * @param direccion La dirección del movimiento
-     * @return true si el movimiento fue completado (4 píxeles), false si se alcanzó un límite
+     * @return true si el movimiento fue completado (4*TAMAÑO píxeles), false si se alcanzó un límite
      */
     public boolean mover(Direccion direccion) {
         int pixelesMovidos = 0;
