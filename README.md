@@ -16,17 +16,18 @@ El proyecto sigue una arquitectura MVC estricta con separación de capas:
 ## Estructura del Proyecto
 
 ```
-src/main/java/com/miempresa/pacman/
+src/udistrital/avanzada/pacman/
 ├── cliente/
-│   ├── controlador/  (ClientController, ClientLauncher)
+│   ├── controlador/  (ControlCliente, LauncherCliente, StreamReceiver)
 │   ├── modelo/       (EstadoConexion)
-│   └── vista/        (ClientWindow)
+│   └── vista/        (VentanaCliente)
 ├── servidor/
-│   ├── controlador/  (ServerController, ClientHandler, ManejadorResultados, Launcher)
+│   ├── controlador/  (ControlServidor, ManejadorCliente, ManejadorResultados, StreamSender, Launcher)
 │   ├── modelo/       (PacMan, Item, Jugador, Juego)
-│   └── vista/        (GamePanel, ServerWindow)
+│   └── vista/        (PanelJuego, VentanaServidor)
 ├── dao/              (IJugadorDAO, JugadorDAOImpl)
-└── util/             (Configuracion, ManejadorSockets)
+├── util/             (Configuracion, ManejadorSockets)
+└── shared/util       (... utilidades compartidas)
 ```
 
 ## Requisitos Previos
@@ -41,23 +42,23 @@ src/main/java/com/miempresa/pacman/
 
 1. Crear la base de datos ejecutando el script:
    ```sql
-   src/main/resources/data/db_script.sql
+   src/data/db_script.sql
    ```
 
 2. Asegúrate de que MySQL esté corriendo y accesible.
 
 ### Archivos de Propiedades
 
-#### Servidor (`src/main/resources/data/server.properties`)
+#### Servidor (`src/data/server.properties`)
 ```properties
 socket.port=9090
-db.url=jdbc:mysql://localhost:3306/pacman_db
+db.url=jdbc:mysql://localhost:3306/pacman_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 db.user=root
-db.password=root
+db.password=12345678
 users.to.load=player1:pass1,player2:pass2,admin:admin123
 ```
 
-#### Cliente (`src/main/resources/data/client.properties`)
+#### Cliente (`src/data/client.properties`)
 ```properties
 server.ip=localhost
 socket.port=9090
@@ -68,18 +69,32 @@ socket.port=9090
 ### Servidor
 
 1. Compilar el proyecto
-2. Ejecutar la clase `Launcher` desde el paquete `com.miempresa.pacman.servidor.controlador`
+2. Ejecutar la clase `Launcher` desde el paquete `udistrital.avanzada.pacman.servidor.controlador`
    ```bash
-   java com.miempresa.pacman.servidor.controlador.Launcher
+   java udistrital.avanzada.pacman.servidor.controlador.Launcher
    ```
 
 ### Cliente
 
 1. Compilar el proyecto
-2. Ejecutar la clase `ClientLauncher` desde el paquete `com.miempresa.pacman.cliente.controlador`
+2. Ejecutar la clase `LauncherCliente` desde el paquete `udistrital.avanzada.pacman.cliente.controlador`
    ```bash
-   java com.miempresa.pacman.cliente.controlador.ClientLauncher
+   java udistrital.avanzada.pacman.cliente.controlador.LauncherCliente
    ```
+
+### Ejecución en NetBeans
+
+- **Abrir el proyecto**: Archivo > Abrir proyecto... y selecciona la carpeta raíz (contiene `nbproject`).
+- **Limpiar y construir**: Ejecuta "Limpiar y construir" para compilar todo.
+- **Ejecutar Servidor**:
+  - Navega a `src/udistrital/avanzada/pacman/servidor/controlador/Launcher.java`.
+  - Clic derecho > "Run File" para iniciar el servidor.
+  - Alternativamente, en Propiedades del proyecto > "Ejecutar" establece la clase principal como `udistrital.avanzada.pacman.servidor.controlador.Launcher`.
+- **Ejecutar Cliente**:
+  - Navega a `src/udistrital/avanzada/pacman/cliente/controlador/LauncherCliente.java`.
+  - Clic derecho > "Run File" para iniciar el cliente.
+  - Alternativamente, crea otra configuración de ejecución con la clase principal `udistrital.avanzada.pacman.cliente.controlador.LauncherCliente`.
+- **Archivos de propiedades**: Asegúrate de que `src/data/server.properties` y `src/data/client.properties` tengan los valores correctos antes de ejecutar.
 
 ## Funcionalidad
 
@@ -91,6 +106,7 @@ socket.port=9090
 - Maneja múltiples clientes concurrentemente
 - Guarda resultados en RandomAccessFile
 - Muestra el mejor jugador al cerrar
+- Transmite streaming de video del juego a los clientes (StreamSender)
 
 ### Cliente
 
@@ -98,6 +114,7 @@ socket.port=9090
 - Se autentica con usuario y contraseña
 - Envía comandos de movimiento: "arriba", "abajo", "izquierda", "derecha"
 - Recibe mensajes del servidor sobre el estado del juego
+- Recibe y renderiza el streaming de video del servidor (StreamReceiver)
 
 ## Características del Juego
 
@@ -140,5 +157,3 @@ socket.port=9090
 - Los usuarios se cargan automáticamente desde el archivo de propiedades del servidor
 - Los resultados se guardan en `resultados.dat` en el directorio de ejecución
 - El mejor jugador se determina por mayor puntaje, y en caso de empate, menor tiempo
-
-"# Pac-Man" 
