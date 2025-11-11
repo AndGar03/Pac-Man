@@ -82,6 +82,20 @@ socket.port=9090
    java udistrital.avanzada.pacman.cliente.controlador.LauncherCliente
    ```
 
+### Ejecución en NetBeans
+
+- **Abrir el proyecto**: Archivo > Abrir proyecto... y selecciona la carpeta raíz (contiene `nbproject`).
+- **Limpiar y construir**: Ejecuta "Limpiar y construir" para compilar todo.
+- **Ejecutar Servidor**:
+  - Navega a `src/udistrital/avanzada/pacman/servidor/controlador/Launcher.java`.
+  - Clic derecho > "Run File" para iniciar el servidor.
+  - Alternativamente, en Propiedades del proyecto > "Ejecutar" establece la clase principal como `udistrital.avanzada.pacman.servidor.controlador.Launcher`.
+- **Ejecutar Cliente**:
+  - Navega a `src/udistrital/avanzada/pacman/cliente/controlador/LauncherCliente.java`.
+  - Clic derecho > "Run File" para iniciar el cliente.
+  - Alternativamente, crea otra configuración de ejecución con la clase principal `udistrital.avanzada.pacman.cliente.controlador.LauncherCliente`.
+- **Archivos de propiedades**: Asegúrate de que `src/data/server.properties` y `src/data/client.properties` tengan los valores correctos antes de ejecutar.
+
 ## Funcionalidad
 
 ### Servidor
@@ -92,6 +106,7 @@ socket.port=9090
 - Maneja múltiples clientes concurrentemente
 - Guarda resultados en RandomAccessFile
 - Muestra el mejor jugador al cerrar
+- Transmite streaming de video del juego a los clientes (StreamSender)
 
 ### Cliente
 
@@ -99,6 +114,7 @@ socket.port=9090
 - Se autentica con usuario y contraseña
 - Envía comandos de movimiento: "arriba", "abajo", "izquierda", "derecha"
 - Recibe mensajes del servidor sobre el estado del juego
+- Recibe y renderiza el streaming de video del servidor (StreamReceiver)
 
 ## Características del Juego
 
