@@ -35,6 +35,7 @@ public class ManejadorCliente extends Thread {
     
     private Juego juego;
     private Jugador jugador;
+    private StreamSender streamSender;
     
     /**
      * Constructor del manejador de cliente.
@@ -69,6 +70,9 @@ public class ManejadorCliente extends Thread {
             
             // Paso 2: Inicializar juego
             inicializarJuego();
+            // Iniciar streaming de video (25 FPS aprox)
+            streamSender = new StreamSender(manejadorSockets, gamePanel, 40);
+            streamSender.start();
             
             // Paso 3: Bucle principal del juego
             ejecutarJuego();
@@ -76,6 +80,9 @@ public class ManejadorCliente extends Thread {
         } catch (Exception e) {
             System.err.println("Error en ClientHandler: " + e.getMessage());
         } finally {
+            if (streamSender != null && streamSender.isAlive()) {
+                streamSender.stopStreaming();
+            }
             manejadorSockets.cerrar();
         }
     }

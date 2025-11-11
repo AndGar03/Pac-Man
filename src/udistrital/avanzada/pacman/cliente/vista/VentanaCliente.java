@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
+import java.awt.Dimension;
 
 /**
  * Ventana principal del cliente.
@@ -27,6 +28,7 @@ public class VentanaCliente extends JFrame {
     private final JTextArea areaMensajes;
     private final JButton btnConectar;
     private final JButton btnEnviar;
+    private final JLabel labelVideo;
     
     /**
      * Constructor de la ventana del cliente.
@@ -52,7 +54,7 @@ public class VentanaCliente extends JFrame {
         panelSuperior.add(btnConectar);
         add(panelSuperior, BorderLayout.NORTH);
         
-        // Panel central: área de mensajes
+        // Panel central: área de mensajes + área de video
         areaMensajes = new JTextArea(15, 40);
         areaMensajes.setEditable(false);
         areaMensajes.setBackground(Color.BLACK);
@@ -60,7 +62,22 @@ public class VentanaCliente extends JFrame {
         areaMensajes.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
         JScrollPane scrollPane = new JScrollPane(areaMensajes);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(0, 255, 180)));
-        add(scrollPane, BorderLayout.CENTER);
+
+        JPanel panelCentral = new JPanel(new BorderLayout());
+        panelCentral.setBackground(Color.BLACK);
+        panelCentral.add(scrollPane, BorderLayout.WEST);
+
+        JPanel panelVideo = new JPanel(new BorderLayout());
+        panelVideo.setBackground(Color.BLACK);
+        panelVideo.setBorder(BorderFactory.createLineBorder(new Color(0, 255, 180)));
+        labelVideo = new JLabel();
+        labelVideo.setOpaque(true);
+        labelVideo.setBackground(Color.BLACK);
+        labelVideo.setPreferredSize(new Dimension(800, 600));
+        panelVideo.add(labelVideo, BorderLayout.CENTER);
+
+        panelCentral.add(panelVideo, BorderLayout.CENTER);
+        add(panelCentral, BorderLayout.CENTER);
         
         // Panel inferior: entrada de comandos
         JPanel panelInferior = new JPanel(new BorderLayout());
@@ -153,6 +170,13 @@ public class VentanaCliente extends JFrame {
     public void habilitarControles(boolean habilitado) {
         campoComando.setEnabled(habilitado);
         btnEnviar.setEnabled(habilitado);
+    }
+    
+    /**
+     * JLabel donde se renderiza el video del servidor.
+     */
+    public JLabel getLabelVideo() {
+        return labelVideo;
     }
     
     /**

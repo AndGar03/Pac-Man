@@ -33,6 +33,7 @@ public class ControlCliente {
     private final EstadoConexion modelo;
     private ManejadorSockets manejadorSockets;
     private Thread hiloReceptor;
+    private StreamReceiver streamReceiver;
     private boolean clienteActivo;
     
     /**
@@ -180,6 +181,11 @@ public class ControlCliente {
                         vista.habilitarControles(true);
                         vista.getCampoComando().requestFocus();
                     });
+                    // Iniciar recepción de video una vez autenticado
+                    if (streamReceiver == null || !streamReceiver.isAlive()) {
+                        streamReceiver = new StreamReceiver(manejadorSockets, vista.getLabelVideo());
+                        streamReceiver.start();
+                    }
                     continue;
                 }
                 
@@ -254,6 +260,9 @@ public class ControlCliente {
         
         if (hiloReceptor != null && hiloReceptor.isAlive()) {
             hiloReceptor.interrupt();
+        }
+        if (streamReceiver != null && streamReceiver.isAlive()) {
+            streamReceiver.stopStreaming();
         }
         
         if (manejadorSockets != null) {
