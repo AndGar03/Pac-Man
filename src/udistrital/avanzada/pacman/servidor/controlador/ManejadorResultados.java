@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ManejadorResultados {
     
-    private static final String ARCHIVO_RESULTADOS = "data/resultados.dat";
+    private static final String ARCHIVO_RESULTADOS = "src/data/resultados.dat";
     private static final int TAMAÑO_REGISTRO = 100; // Tamaño fijo de cada registro
     
     /**

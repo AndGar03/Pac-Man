@@ -96,7 +96,7 @@ public class ControlCliente {
         fileChooser.setDialogTitle("Seleccionar archivo de configuración del cliente");
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
             "Archivos Properties", "properties"));
-        fileChooser.setCurrentDirectory(new File("src/main/resources/data"));
+        fileChooser.setCurrentDirectory(new File("src/data"));
         
         int resultado = fileChooser.showOpenDialog(vista);
         
