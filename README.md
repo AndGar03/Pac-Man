@@ -141,6 +141,7 @@ Nota de migración: si tenías `data/resultados.dat` en la raíz del proyecto, m
 - **Controlador**: Coordina entre modelo y vista, maneja eventos
 
 ## Notas
+link al repositorio https://github.com/AndGar03/Pac-Man.git
 
 - El servidor debe estar ejecutándose antes de que el cliente se conecte
 - Los usuarios se cargan automáticamente desde el archivo de propiedades del servidor
