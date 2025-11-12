@@ -46,9 +46,9 @@ src/main/java/com/miempresa/pacman/
 
 2. Asegúrate de que MySQL esté corriendo y accesible.
 
-### Archivos de Propiedades
+### Archivos de Datos y Propiedades (unificados en `src/data`)
 
-#### Servidor (`src/main/resources/data/server.properties`)
+#### Servidor (`src/data/server.properties`)
 ```properties
 socket.port=9090
 db.url=jdbc:mysql://localhost:3306/pacman_db
@@ -57,7 +57,7 @@ db.password=root
 users.to.load=player1:pass1,player2:pass2,admin:admin123
 ```
 
-#### Cliente (`src/main/resources/data/client.properties`)
+#### Cliente (`src/data/client.properties`)
 ```properties
 server.ip=localhost
 socket.port=9090
@@ -80,6 +80,12 @@ socket.port=9090
    ```bash
    java com.miempresa.pacman.cliente.controlador.ClientLauncher
    ```
+
+### Resultados del Juego
+
+- Archivo de resultados: `src/data/resultados.dat` (RandomAccessFile)
+
+Nota de migración: si tenías `data/resultados.dat` en la raíz del proyecto, muévelo manualmente a `src/data/resultados.dat` para que el servidor pueda leer el historial previo.
 
 ## Funcionalidad
 
@@ -138,7 +144,7 @@ socket.port=9090
 
 - El servidor debe estar ejecutándose antes de que el cliente se conecte
 - Los usuarios se cargan automáticamente desde el archivo de propiedades del servidor
-- Los resultados se guardan en `resultados.dat` en el directorio de ejecución
+- Los resultados se guardan en `src/data/resultados.dat`
 - El mejor jugador se determina por mayor puntaje, y en caso de empate, menor tiempo
 
-"# Pac-Man" 
+"# Pac-Man"
